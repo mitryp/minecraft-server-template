@@ -1,0 +1,66 @@
+services:
+  mc:
+    image: itzg/minecraft-server${MC_CONTAINER}
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    ports:
+      - "25565:25565"
+    networks:
+      cont_net:
+        ipv4_address: "10.103.0.10"
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      # Minecraft server config
+      EULA: "TRUE"
+      TYPE: "${MC_TYPE:error}"
+      VERSION: "${MC_VERSION:error}"
+      MIN_MEMORY: "${MC_MIN_MEMORY:error}"
+      MAX_MEMORY: "${MC_MAX_MEMORY:error}"
+      SERVER_NAME: "${MC_SERVER_NAME:-Minecraft server}"
+      MOTD: "${MC_MOTD:-A Minecraft server}"
+      WHITELIST: |-
+        ${MC_WHITELIST}
+      ENFORCE_WHITELIST: "${MC_ENFORCE_WHITELIST:-TRUE}"
+      OPS: "${MC_OPS:-mitryp}"
+      SPAWN_PROTECTION: "${MC_SPAWN_PROTECTION:-FALSE}"
+
+      # CurseForge mod pack config
+      CF_API_KEY: "${CF_API_KEY}"
+      CF_PAGE_URL: "${CF_PAGE_URL}"
+      CF_EXCLUDE_MODS: "${CF_EXCLUDE_MODS}"
+
+      # RCON setup
+      RCON_CMDS_STARTUP: |-
+        ${RCON_CMDS_STARTUP}
+      RCON_CMDS_FIRST_CONNECT: |-
+        ${RCON_CMDS_FIRST_CONNECT}
+      RCON_CMDS_LAST_DISCONNECT: |-
+        ${RCON_CMDS_LAST_DISCONNECT}
+    volumes:
+      - ./data:/data
+
+  playit:
+    image: ghcr.io/playit-cloud/playit-agent:0.15
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      SECRET_KEY: "${PLAYIT_SECRET_KEY}"
+    networks:
+      cont_net:
+        ipv4_address: "10.103.0.20"
+    depends_on:
+      - mc
+    profiles:
+      - public
+
+networks:
+  cont_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.103.0.0/16
