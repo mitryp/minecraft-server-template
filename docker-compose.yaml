@@ -24,6 +24,7 @@ services:
       ENFORCE_WHITELIST: "${MC_ENFORCE_WHITELIST-TRUE}"
       OPS: "${MC_OPS:-mitryp}"
       SPAWN_PROTECTION: "${MC_SPAWN_PROTECTION-FALSE}"
+      ONLINE_MODE: "${MC_ONLINE_MODE-TRUE}"
 
       # CurseForge mod pack config
       CF_API_KEY: "${CF_API_KEY}"
@@ -41,7 +42,7 @@ services:
       - ./data:/data
 
   playit:
-    image: ghcr.io/playit-cloud/playit-agent:0.15
+    image: ghcr.io/playit-cloud/playit-agent${PLAYIT_CONTAINER:-:0.15}
     restart: unless-stopped
     env_file: ./.env
     environment:
