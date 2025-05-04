@@ -1,6 +1,6 @@
 # Minecraft Server Docker Template
 
-This is my Minecraft Server template for Docker Compose.
+This is our Minecraft Server template for Docker Compose.
 
 ## Tech used
 
