@@ -30,7 +30,8 @@ docker compose --profile public up
 
 Notes:
 
-- You will need to provide your Docker agent key when using public profile.
+- You will need to provide your Docker agent key when using the `public` profile.
+  Additionally, you will need to change the address and port of your Minecraft instance to `10.103.0.10:25565` in the Playit console.
   [More info.](#playitgg)
 - To run a headless server, add `-d` to the Docker Compose command.
 
